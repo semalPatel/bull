@@ -1,6 +1,8 @@
 extern crate clap;
 
+
 use clap::{Arg, App};
+use stock;
 
 fn main() {
         let matches = App::new("bull")
@@ -14,5 +16,6 @@ fn main() {
                                 .help("get price by name"))
                     .get_matches();
         let stock_name = matches.value_of("stock name").unwrap();
+        let info = stock::getPrice(stock_name);
         println!("{}", stock_name);
 }
