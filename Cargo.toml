@@ -9,3 +9,4 @@ clap = "2.32.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 reqwest = "0.9.16"
+error-chain = "0.12.1"

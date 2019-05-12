@@ -1,5 +1,9 @@
+#[macro_use]
+extern crate error_chain;
+
 extern crate clap;
 extern crate reqwest;
+
 
 mod stock;
 
