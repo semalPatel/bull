@@ -1,8 +1,9 @@
 extern crate clap;
+extern crate reqwest;
 
+mod stock;
 
 use clap::{Arg, App};
-use stock;
 
 fn main() {
         let matches = App::new("bull")
@@ -15,7 +16,7 @@ fn main() {
                                 .index(1)
                                 .help("get price by name"))
                     .get_matches();
-        let stock_name = matches.value_of("stock name").unwrap();
-        let info = stock::getPrice(stock_name);
-        println!("{}", stock_name);
+        let stock_name = matches.value_of("stock name").unwrap().to_string();
+        let stock = stock::Stock::get_stock(stock_name);
+        println!("{} - ${}", stock.quote.symbol, stock.quote.price);
 }
