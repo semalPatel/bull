@@ -1,2 +1,2 @@
-# Command Line StockInfo
+# bull
 a clutter-free stocks cli
