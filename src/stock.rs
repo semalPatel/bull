@@ -42,7 +42,7 @@ impl Stock {
         let api_endpoint = format!("https://www.alphavantage.co/query?function={quote}&symbol={symbol}&apikey={apikey}",
                                     quote = "GLOBAL_QUOTE",
                                     symbol = stock_symbol,
-                                    apikey = "UVLIY3BWZW09Z67G");
+                                    apikey = "api-key");
         Ok(reqwest::get(&api_endpoint)?.json()?)
     }
 }
