@@ -1,9 +1,10 @@
 # Bull Portfolio and Details Execution Plan
 
 ## Status
-- Phase: Planning only
-- Code changes: Not started for this feature set
+- Phase: Implemented
+- Code changes: Portfolio store, CLI subcommands, Stooq details, renderers, tests, and README updates are complete
 - Goal: Add local positions/watchlist and Stooq-backed stock details without changing the existing quote-first CLI behavior
+- Validation: `cargo test` and `cargo clippy --all-targets --all-features -- -D warnings` pass as of 2026-04-07
 
 ## Scope
 ### In Scope

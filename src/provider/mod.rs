@@ -1,6 +1,6 @@
 use crate::cli::ProviderChoice;
 use crate::error::{BullError, Result};
-use crate::model::Quote;
+use crate::model::{Quote, QuoteDetails};
 
 pub mod alphavantage;
 pub mod community;
@@ -9,6 +9,12 @@ pub mod twelvedata;
 pub trait QuoteProvider {
     fn name(&self) -> &'static str;
     fn quote(&self, symbol: &str) -> Result<Quote>;
+    fn quote_details(&self, _symbol: &str) -> Result<QuoteDetails> {
+        Err(BullError::ProviderUnsupported {
+            provider: self.name().to_string(),
+            operation: "quote details".to_string(),
+        })
+    }
 }
 
 pub struct ProviderPolicy {
@@ -74,6 +80,28 @@ impl ProviderPolicy {
                     let _ = provider_name;
                     last_error = Some(error);
                 }
+            }
+        }
+
+        Err(
+            last_error.unwrap_or_else(|| BullError::ProviderUnavailable {
+                symbol: symbol.to_string(),
+            }),
+        )
+    }
+
+    pub fn quote_details(&self, symbol: &str) -> Result<QuoteDetails> {
+        if self.providers.is_empty() {
+            return Err(BullError::ProviderUnavailable {
+                symbol: symbol.to_string(),
+            });
+        }
+
+        let mut last_error = None;
+        for provider in &self.providers {
+            match provider.quote_details(symbol) {
+                Ok(details) => return Ok(details),
+                Err(error) => last_error = Some(error),
             }
         }
 

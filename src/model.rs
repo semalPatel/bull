@@ -14,6 +14,21 @@ pub struct Quote {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct QuoteDetails {
+    pub symbol: String,
+    pub price: f64,
+    pub open: Option<f64>,
+    pub high: Option<f64>,
+    pub low: Option<f64>,
+    pub close: Option<f64>,
+    pub volume: Option<u64>,
+    pub as_of: Option<DateTime<Utc>>,
+    pub currency: Option<String>,
+    pub source: String,
+    pub stale: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Resolution {
     pub query: String,
     pub symbol: String,

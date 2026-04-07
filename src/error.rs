@@ -22,8 +22,12 @@ pub enum BullError {
         symbol: String,
         message: String,
     },
+    #[error("quote provider {provider} does not support {operation}")]
+    ProviderUnsupported { provider: String, operation: String },
     #[error("no quote provider could return a quote for {symbol}")]
     ProviderUnavailable { symbol: String },
+    #[error("portfolio error: {0}")]
+    Portfolio(String),
     #[error("cache error: {0}")]
     Cache(String),
     #[error("http error: {0}")]
