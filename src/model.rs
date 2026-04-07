@@ -41,13 +41,6 @@ pub struct QuoteResult {
     pub quote: Quote,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CliErrorResult {
-    pub query: String,
-    pub message: String,
-    pub suggestions: Vec<ResolutionCandidate>,
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ResolutionCandidate {
     pub symbol: String,

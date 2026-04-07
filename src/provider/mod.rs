@@ -64,9 +64,13 @@ impl ProviderPolicy {
 
         let mut last_error = None;
         for provider in &self.providers {
+            let provider_name = provider.name();
             match provider.quote(symbol) {
                 Ok(quote) => return Ok(quote),
-                Err(error) => last_error = Some(error),
+                Err(error) => {
+                    let _ = provider_name;
+                    last_error = Some(error);
+                }
             }
         }
 

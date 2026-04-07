@@ -2,7 +2,6 @@ use clap::{Parser, ValueEnum};
 use std::time::Duration;
 
 pub const WATCH_INTERVAL_FLOOR_SECONDS: u64 = 2;
-pub const WATCH_INTERVAL_DEFAULT_SECONDS: u64 = 5;
 
 #[derive(Debug, Clone, Parser)]
 #[command(

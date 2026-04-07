@@ -35,6 +35,7 @@ impl SecIndex {
         Self::load_result().unwrap_or_else(|_| Self::seed())
     }
 
+    #[cfg(test)]
     pub fn from_companies(companies: Vec<Company>) -> Self {
         Self { companies }
     }
