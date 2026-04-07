@@ -12,6 +12,14 @@ use std::time::Duration;
 pub const DEFAULT_QUOTE_CACHE_TTL: Duration = Duration::from_secs(15);
 pub const DEFAULT_INDEX_CACHE_TTL: Duration = Duration::from_secs(24 * 60 * 60);
 
+pub fn index_cache_ttl() -> Duration {
+    std::env::var("BULL_CACHE_TTL_INDEX")
+        .ok()
+        .and_then(|value| value.parse::<u64>().ok())
+        .map(Duration::from_secs)
+        .unwrap_or(DEFAULT_INDEX_CACHE_TTL)
+}
+
 #[derive(Debug, Clone)]
 pub struct QuoteCache {
     path: PathBuf,

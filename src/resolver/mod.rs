@@ -69,7 +69,11 @@ impl Resolver {
         }
 
         if matcher::auto_resolves(&candidates) {
-            return Ok(to_resolution(query, &candidates[0], candidates[0].strategy.clone()));
+            return Ok(to_resolution(
+                query,
+                &candidates[0],
+                candidates[0].strategy.clone(),
+            ));
         }
 
         if yes {
@@ -77,7 +81,11 @@ impl Resolver {
                 "bull: ambiguous query '{query}', picking {} ({}) because --yes was set",
                 candidates[0].symbol, candidates[0].company_name
             );
-            return Ok(to_resolution(query, &candidates[0], candidates[0].strategy.clone()));
+            return Ok(to_resolution(
+                query,
+                &candidates[0],
+                candidates[0].strategy.clone(),
+            ));
         }
 
         if !io::stdin().is_terminal() {
@@ -97,7 +105,11 @@ impl Resolver {
         Ok(to_resolution(query, candidate, candidate.strategy.clone()))
     }
 
-    fn persist_alias(&mut self, normalized_query: &str, candidate: &ResolutionCandidate) -> Result<()> {
+    fn persist_alias(
+        &mut self,
+        normalized_query: &str,
+        candidate: &ResolutionCandidate,
+    ) -> Result<()> {
         self.aliases
             .insert(normalized_query.to_string(), candidate.clone());
         if let Some(path) = &self.alias_path {

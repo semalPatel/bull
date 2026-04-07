@@ -1,9 +1,13 @@
 # Bull CLI Execution Plan
 
 ## Status
-- Phase: Planning only
-- Code changes: Not started
-- Goal: Iterate on this document until scope and behavior are stable, then implement
+- Phase: Implemented through v1 validation
+- Code changes: Implemented in logical phase commits
+- Goal: Keep this document as the implementation contract and release checklist
+
+## Decision Log
+- 2026-04-06: Used `reqwest` with `rustls-tls` instead of native TLS so the user-space Rust toolchain can pass quality gates without system OpenSSL headers.
+- 2026-04-06: Kept the default no-key provider labeled as `community-stooq` after live smoke testing showed the initially planned community quote endpoint returned 401/rate-limit responses.
 
 ## Indexed Execution Map
 1. `Map-01`: Product promise and scope guardrails

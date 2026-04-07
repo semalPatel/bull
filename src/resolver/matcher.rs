@@ -13,7 +13,9 @@ pub fn is_ticker(input: &str) -> bool {
         && trimmed
             .chars()
             .all(|character| character.is_ascii_uppercase() || character == '.' || character == '-')
-        && trimmed.chars().any(|character| character.is_ascii_uppercase())
+        && trimmed
+            .chars()
+            .any(|character| character.is_ascii_uppercase())
 }
 
 pub fn normalize(input: &str) -> String {
@@ -80,6 +82,14 @@ pub fn candidates(query: &str, companies: &[Company]) -> Vec<ResolutionCandidate
 
 pub fn auto_resolves(candidates: &[ResolutionCandidate]) -> bool {
     if let Some(top) = candidates.first() {
+        if top.confidence >= 1.0
+            && matches!(
+                top.strategy,
+                ResolutionStrategy::ExactName | ResolutionStrategy::ExactSymbol
+            )
+        {
+            return true;
+        }
         let margin = candidates
             .get(1)
             .map(|runner_up| top.confidence - runner_up.confidence)
@@ -103,9 +113,7 @@ fn token_confidence(query_tokens: &[&str], company_tokens: &[&str]) -> f64 {
         .iter()
         .filter(|query_token| {
             company_tokens.iter().any(|company_token| {
-                company_token == *query_token
-                    || company_token.starts_with(**query_token)
-                    || query_token.starts_with(*company_token)
+                company_token == *query_token || company_token.starts_with(**query_token)
             })
         })
         .count();
@@ -167,5 +175,17 @@ mod tests {
         let result = candidates("apple", &companies);
         assert_eq!(result[0].symbol, "AAPL");
         assert!(auto_resolves(&result));
+    }
+
+    #[test]
+    fn long_unknown_token_does_not_match_short_company_prefix() {
+        let companies = vec![Company {
+            symbol: "TTE".to_string(),
+            company_name: "TotalEnergies SE".to_string(),
+            cik: 879764,
+            exchange: None,
+        }];
+
+        assert!(candidates("totallyunknowncompanyzzzz", &companies).is_empty());
     }
 }

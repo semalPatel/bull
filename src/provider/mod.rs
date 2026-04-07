@@ -17,7 +17,10 @@ pub struct ProviderPolicy {
 
 impl ProviderPolicy {
     pub fn from_env(choice: Option<ProviderChoice>) -> Self {
-        let providers: Vec<Box<dyn QuoteProvider>> = match choice.unwrap_or(ProviderChoice::Auto) {
+        let choice = choice
+            .or_else(provider_from_env)
+            .unwrap_or(ProviderChoice::Auto);
+        let providers: Vec<Box<dyn QuoteProvider>> = match choice {
             ProviderChoice::Auto => {
                 let mut providers: Vec<Box<dyn QuoteProvider>> =
                     vec![Box::new(community::CommunityProvider::new())];
@@ -74,8 +77,24 @@ impl ProviderPolicy {
             }
         }
 
-        Err(last_error.unwrap_or_else(|| BullError::ProviderUnavailable {
-            symbol: symbol.to_string(),
-        }))
+        Err(
+            last_error.unwrap_or_else(|| BullError::ProviderUnavailable {
+                symbol: symbol.to_string(),
+            }),
+        )
+    }
+}
+
+fn provider_from_env() -> Option<ProviderChoice> {
+    match std::env::var("BULL_PROVIDER")
+        .ok()?
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "auto" => Some(ProviderChoice::Auto),
+        "community" | "community-yahoo" | "community-stooq" => Some(ProviderChoice::Community),
+        "twelvedata" | "twelve-data" => Some(ProviderChoice::Twelvedata),
+        "alphavantage" | "alpha-vantage" => Some(ProviderChoice::Alphavantage),
+        _ => None,
     }
 }

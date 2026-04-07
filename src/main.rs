@@ -6,8 +6,8 @@ mod output;
 mod provider;
 mod resolver;
 
-use clap::Parser;
 use cache::QuoteCache;
+use clap::Parser;
 use cli::Cli;
 use error::{BullError, Result};
 use model::{QuoteResult, Resolution};

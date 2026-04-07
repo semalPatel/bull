@@ -26,7 +26,10 @@ pub struct Cli {
     #[arg(long, help = "Disable ANSI color in table output")]
     pub no_color: bool,
 
-    #[arg(long, help = "For ambiguous non-interactive use, pick the top resolver candidate and warn on stderr")]
+    #[arg(
+        long,
+        help = "For ambiguous non-interactive use, pick the top resolver candidate and warn on stderr"
+    )]
     pub yes: bool,
 
     #[arg(value_name = "QUERY", required = true, num_args = 1.., help = "Ticker symbol or company name")]

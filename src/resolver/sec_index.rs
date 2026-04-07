@@ -1,4 +1,4 @@
-use crate::cache::DEFAULT_INDEX_CACHE_TTL;
+use crate::cache::index_cache_ttl;
 use crate::error::{BullError, Result};
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
@@ -140,7 +140,7 @@ fn cache_is_fresh(cache_path: &PathBuf) -> bool {
     let Ok(age) = SystemTime::now().duration_since(modified) else {
         return false;
     };
-    age <= DEFAULT_INDEX_CACHE_TTL
+    age <= index_cache_ttl()
 }
 
 #[cfg(test)]

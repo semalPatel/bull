@@ -81,11 +81,14 @@ fn parse_quote(symbol: &str, payload: &str) -> Result<Quote> {
         message: missing_quote_message,
     })?;
 
-    let price = quote.price.parse::<f64>().map_err(|_| BullError::Provider {
-        provider: "alphavantage".to_string(),
-        symbol: symbol.to_string(),
-        message: "provider response did not include numeric price".to_string(),
-    })?;
+    let price = quote
+        .price
+        .parse::<f64>()
+        .map_err(|_| BullError::Provider {
+            provider: "alphavantage".to_string(),
+            symbol: symbol.to_string(),
+            message: "provider response did not include numeric price".to_string(),
+        })?;
 
     Ok(Quote {
         symbol: quote.symbol,
