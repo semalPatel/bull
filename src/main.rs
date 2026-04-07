@@ -23,7 +23,7 @@ fn run() -> Result<()> {
         return Err(BullError::NoQueries);
     }
 
-    let resolver = resolver::Resolver::new();
+    let mut resolver = resolver::Resolver::new();
     for query in &args.queries {
         let resolution = resolver.resolve(query, args.symbol, args.yes)?;
         println!(
