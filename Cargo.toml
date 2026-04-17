@@ -1,8 +1,22 @@
 [package]
 name = "bull"
 version = "0.1.0"
-authors = ["semal259 <semalpatel2596@gmail.com>"]
 edition = "2018"
+description = "A clutter-free stock quote CLI for checking the latest available free quote for US equities."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/semalPatel/bull"
+homepage = "https://github.com/semalPatel/bull"
+keywords = ["stocks", "cli", "finance", "quotes"]
+categories = ["command-line-utilities"]
+include = [
+    "Cargo.toml",
+    "Cargo.lock",
+    "LICENSE",
+    "README.md",
+    "src/**",
+    "tests/**",
+]
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }

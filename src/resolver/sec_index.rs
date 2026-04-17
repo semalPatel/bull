@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use std::time::SystemTime;
 
 const SEC_COMPANY_TICKERS_URL: &str = "https://www.sec.gov/files/company_tickers.json";
-const SEC_USER_AGENT: &str = "bull-cli/0.1 (contact: semalpatel2596@gmail.com)";
+const DEFAULT_SEC_CONTACT: &str = "9878547+semalPatel@users.noreply.github.com";
 
 #[derive(Debug, Clone)]
 pub struct SecIndex {
@@ -103,10 +103,19 @@ fn fetch_sec_companies() -> Result<Vec<Company>> {
         .build()?;
     let response = client
         .get(SEC_COMPANY_TICKERS_URL)
-        .header(reqwest::header::USER_AGENT, SEC_USER_AGENT)
+        .header(reqwest::header::USER_AGENT, sec_user_agent())
         .send()?
         .error_for_status()?;
     parse_company_tickers(&response.text()?)
+}
+
+fn sec_user_agent() -> String {
+    let contact = std::env::var("BULL_SEC_CONTACT")
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| DEFAULT_SEC_CONTACT.to_string());
+    format!("bull-cli/0.1 (contact: {contact})")
 }
 
 fn parse_company_tickers(payload: &str) -> Result<Vec<Company>> {
@@ -146,6 +155,12 @@ fn cache_is_fresh(cache_path: &PathBuf) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::{Mutex, OnceLock};
+
+    fn env_lock() -> &'static Mutex<()> {
+        static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+        LOCK.get_or_init(|| Mutex::new(()))
+    }
 
     #[test]
     fn parses_sec_company_tickers_payload() {
@@ -159,5 +174,26 @@ mod tests {
         assert_eq!(companies.len(), 2);
         assert_eq!(companies[0].symbol, "AAPL");
         assert_eq!(companies[0].company_name, "Apple Inc.");
+    }
+
+    #[test]
+    fn default_sec_user_agent_uses_project_contact() {
+        let _guard = env_lock().lock().unwrap();
+        std::env::remove_var("BULL_SEC_CONTACT");
+
+        assert_eq!(
+            sec_user_agent(),
+            "bull-cli/0.1 (contact: 9878547+semalPatel@users.noreply.github.com)"
+        );
+    }
+
+    #[test]
+    fn sec_user_agent_uses_contact_override_when_present() {
+        let _guard = env_lock().lock().unwrap();
+        std::env::set_var("BULL_SEC_CONTACT", "oss@example.com");
+
+        assert_eq!(sec_user_agent(), "bull-cli/0.1 (contact: oss@example.com)");
+
+        std::env::remove_var("BULL_SEC_CONTACT");
     }
 }

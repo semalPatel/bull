@@ -4,6 +4,12 @@ A clutter-free stock quote CLI for checking the latest available free quote for 
 
 `bull` is zero-config for common US equities: pass a ticker or company name and it resolves the symbol, fetches a quote, and shows the quote freshness/source so provider latency is visible. It also keeps a local-only watchlist/positions file for quick portfolio checks.
 
+## Install
+
+```sh
+cargo install bull
+```
+
 ## Usage
 
 ```sh
@@ -65,3 +71,4 @@ Environment overrides:
 - `BULL_PROVIDER`
 - `BULL_CACHE_TTL_QUOTES`
 - `BULL_CACHE_TTL_INDEX`
+- `BULL_SEC_CONTACT`
